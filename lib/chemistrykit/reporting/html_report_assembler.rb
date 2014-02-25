@@ -18,6 +18,7 @@ module ChemistryKit
       end
 
       def assemble
+        puts 'assemble'
         result_files = Dir.glob(File.join(@results_path, 'results_*.html'))
 
         result_files.each do |file|
@@ -64,6 +65,7 @@ module ChemistryKit
       end
 
       def get_report_head(state)
+        puts 'get_report_head'
         build_fragment do |doc|
           doc.head do
             doc.meta(charset: 'utf-8')
@@ -81,6 +83,7 @@ module ChemistryKit
       end
 
       def get_report_header
+        puts 'get_report_header'
         build_fragment do |doc|
           doc.header(class: 'row') do
             doc.div(class: 'large-12 columns') do
@@ -91,6 +94,7 @@ module ChemistryKit
       end
 
       def get_report_summary(status, beakers, reactions, failures, pendings, duration)
+        puts 'get_report_summary'
         if status == 'passing'
           icon = 'icon-ok-sign'
           message = ' Brew Passing'
@@ -162,6 +166,7 @@ module ChemistryKit
       end
 
       def get_report_endscripts
+        puts 'get_report_endscripts'
         build_fragment do |doc|
           doc.script do
             doc.text load_from_file(File.join(File.dirname(File.expand_path(__FILE__)), '../../../report/', 'javascripts', 'vendor', 'jquery.js'))
@@ -197,6 +202,7 @@ module ChemistryKit
       end
 
       def build_fragment
+        puts 'build_fragment'
         final = Nokogiri::HTML::DocumentFragment.parse ''
         Nokogiri::HTML::Builder.with(final) do |doc|
           yield doc
@@ -205,6 +211,7 @@ module ChemistryKit
       end
 
       def load_from_file(path)
+        puts 'load_from_file'
         File.open(path, 'rb') { |file| file.read }
       end
       # rubocop:enable MethodLength, ParameterLists

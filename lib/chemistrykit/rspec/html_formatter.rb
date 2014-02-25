@@ -21,11 +21,13 @@ module ChemistryKit
       end
 
       def start(example_count)
+        puts 'start'
         super(example_count)
         @output_html = ''
       end
 
       def example_group_started(example_group)
+        puts 'example_group_started'
         @example_group = example_group
         @example_group_html = ''
         @example_group_number += 1
@@ -33,6 +35,7 @@ module ChemistryKit
       end
 
       def example_group_finished(example_group)
+        puts 'example_group_finished'
         @output_html << build_fragment do |doc|
           show = @example_group_status == 'passing' ? 'show' : ''
           doc.div(class: "row example-group #{@example_group_status} #{show}") do
@@ -50,15 +53,18 @@ module ChemistryKit
       end
 
       def example_started(example)
+        puts 'example_started'
         super(example)
         @example_number += 1
       end
 
       def example_passed(example)
+        puts 'example_passed'
         @example_group_html += render_example('passing', example) {}
       end
 
       def example_pending(example)
+        puts 'example_pending'
         super(example)
         @example_group_html += render_example('pending', example) do |doc|
           doc.div(class: 'row exception') do
@@ -72,6 +78,7 @@ module ChemistryKit
       end
 
       def example_failed(example)
+        puts 'example_failed'
         super(example)
         exception = example.metadata[:execution_result][:exception]
         @example_group_status = 'failing'
@@ -96,6 +103,7 @@ module ChemistryKit
       # TODO: put the right methods private, or better yet, pull this stuff out into its own
       # set of classes
       def render_extra_content(example)
+        puts 'render_extra_content'
         build_fragment do |doc|
           doc.div(class: 'row extra-content') do
             doc.div(class: 'large-12 columns') do
@@ -114,6 +122,7 @@ module ChemistryKit
       end
 
       def render_dom_html_if_found(example)
+        puts 'render_dom_html_if_found'
         # TODO: pull out the common code for checking if the log file exists
         beaker_folder = slugify(@example_group.description)
         example_folder = slugify(@example_group.description + '_' + example.description)
@@ -133,6 +142,7 @@ module ChemistryKit
 
       # TODO: replace the section id with a uuid or something....
       def render_failshot_if_found(example)
+        puts 'render_failshot_if_found'
         beaker_folder = slugify(@example_group.description)
         example_folder = slugify(@example_group.description + '_' + example.description)
 
@@ -149,6 +159,7 @@ module ChemistryKit
       end
 
       def render_log_if_found(example, log)
+        puts 'render_log_if_found'
         beaker_folder = slugify(@example_group.description)
         example_folder = slugify(@example_group.description + '_' + example.description)
         log_path = File.join(Dir.getwd, 'evidence', beaker_folder, example_folder, log)
@@ -162,10 +173,12 @@ module ChemistryKit
       end
 
       def slugify(string)
+        puts 'slugify'
         string.downcase.strip.gsub(' ', '_').gsub(/[^\w-]/, '')
       end
 
       def render_stack_trace(example)
+        puts 'render_stack_trace'
         exception = example.metadata[:execution_result][:exception]
         render_section('Stack Trace') do |doc|
           doc.pre do
@@ -175,6 +188,7 @@ module ChemistryKit
       end
 
       def render_code(exception)
+        puts 'render_code'
         backtrace = exception.backtrace.map { |line| backtrace_line(line) }
         backtrace.compact!
         @snippet_extractor ||= ::RSpec::Core::Formatters::SnippetExtractor.new
@@ -182,6 +196,7 @@ module ChemistryKit
       end
 
       def render_section(title)
+        puts 'render_section'
         panel_id = SecureRandom.uuid
         build_fragment do |doc|
           doc.section do
@@ -196,6 +211,7 @@ module ChemistryKit
       end
 
       def render_example(status, example)
+        puts 'render_example'
         build_fragment do |doc|
           show = status == 'passing' ? 'hide' : ''
           doc.div(class: "row example #{status} #{show}") do
@@ -223,6 +239,7 @@ module ChemistryKit
       end
 
       def dump_summary(duration, example_count, failure_count, pending_count)
+        puts 'dump_summary'
         output = build_fragment do |doc|
           doc.div(
             class: 'results',
@@ -240,6 +257,7 @@ module ChemistryKit
       # end
       #
       def build_fragment
+        puts 'build_fragment'
         final = Nokogiri::HTML::DocumentFragment.parse ''
         Nokogiri::HTML::Builder.with(final) do |doc|
           yield doc
